@@ -1,0 +1,97 @@
+openapi: 3.0.3
+info:
+  title: Quote API
+  version: 1.0.0
+
+paths:
+  /v1/quotes:
+    post:
+      summary: Get shipping quotes
+      operationId: getShippingQuotes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - starting_country
+                - destination_country
+                - boxes
+              properties:
+                starting_country:
+                  type: string
+                destination_country:
+                  type: string
+                boxes:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Box'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  quotes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Quote'
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    Box:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+        weight_kg:
+          type: number
+          format: float
+        length:
+          type: number
+          format: float
+        width:
+          type: number
+          format: float
+        height:
+          type: number
+          format: float
+
+    Quote:
+      type: object
+      properties:
+        shipping_channel:
+          type: string
+        total_cost:
+          type: number
+          format: float
+        cost_breakdown:
+          type: object
+          properties:
+            shipping_cost:
+              type: number
+              format: float
+            service_fee:
+              type: number
+              format: float
+            oversized_fee:
+              type: number
+              format: float
+            overweight_fee:
+              type: number
+              format: float
+        shipping_time_range:
+          type: object
+          properties:
+            min_days:
+              type: integer
+              format: int32
+            max_days:
+              type: integer
+              format: int32

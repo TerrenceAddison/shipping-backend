@@ -1,0 +1,137 @@
+[
+    {
+        "starting_country": "China",
+        "destination_country": "USA",
+        "shipping_channel": "air",
+        "shipping_time_range": {
+            "min_days": 15,
+            "max_days": 20
+        },
+        "rates": [
+            {
+                "min_weight_kg": 0,
+                "max_weight_kg": 20,
+                "per_kg_rate": 5.00
+            },
+            {
+                "min_weight_kg": 20,
+                "max_weight_kg": 40,
+                "per_kg_rate": 4.50
+            },
+            {
+                "min_weight_kg": 40,
+                "max_weight_kg": 100,
+                "per_kg_rate": 4.00
+            },
+            {
+                "min_weight_kg": 100,
+                "max_weight_kg": 10000,
+                "per_kg_rate": 3.50
+            }
+        ]
+    },
+    {
+        "starting_country": "China",
+        "destination_country": "USA",
+        "shipping_channel": "ocean",
+        "shipping_time_range": {
+            "min_days": 45,
+            "max_days": 50
+        },
+        "rates": [
+            {
+                "min_weight_kg": 100,
+                "max_weight_kg": 10000,
+                "per_kg_rate": 1.00
+            }
+        ]
+    },
+    {
+        "starting_country": "India",
+        "destination_country": "USA",
+        "shipping_channel": "air",
+        "shipping_time_range": {
+            "min_days": 10,
+            "max_days": 15
+        },
+        "rates": [
+            {
+                "min_weight_kg": 0,
+                "max_weight_kg": 10,
+                "per_kg_rate": 10.00
+            },
+            {
+                "min_weight_kg": 10,
+                "max_weight_kg": 20,
+                "per_kg_rate": 9.50
+            },
+            {
+                "min_weight_kg": 20,
+                "max_weight_kg": 30,
+                "per_kg_rate": 9.00
+            },
+            {
+                "min_weight_kg": 30,
+                "max_weight_kg": 40,
+                "per_kg_rate": 8.50
+            },
+            {
+                "min_weight_kg": 40,
+                "max_weight_kg": 50,
+                "per_kg_rate": 8.00
+            },
+            {
+                "min_weight_kg": 50,
+                "max_weight_kg": 10000,
+                "per_kg_rate": 6.00
+            }
+        ]
+    },
+    {
+        "starting_country": "India",
+        "destination_country": "USA",
+        "shipping_channel": "ocean",
+        "shipping_time_range": {
+            "min_days": 40,
+            "max_days": 50
+        },
+        "rates": [
+            {
+                "min_weight_kg": 100,
+                "max_weight_kg": 10000,
+                "per_kg_rate": 1.50
+            }
+        ]
+    },
+    {
+        "starting_country": "Vietnam",
+        "destination_country": "USA",
+        "shipping_channel": "air",
+        "shipping_time_range": {
+            "min_days": 0,
+            "max_days": 100
+        },
+        "rates": [
+            {
+                "min_weight_kg": 0,
+                "max_weight_kg": 100,
+                "per_kg_rate": 5.00
+            },
+            {
+                "min_weight_kg": 100,
+                "max_weight_kg": 200,
+                "per_kg_rate": 4.50
+            },
+            {
+                "min_weight_kg": 200,
+                "max_weight_kg": 500,
+                "per_kg_rate": 4.00
+            },
+            {
+                "min_weight_kg": 500,
+                "max_weight_kg": 10000,
+                "per_kg_rate": 3.50
+            }
+        ]
+    }
+]
