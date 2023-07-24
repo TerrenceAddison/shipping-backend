@@ -9,7 +9,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def create_database():
-    # Base.metadata.drop_all(engine) # for rebuild database
+    Base.metadata.drop_all(engine)  # for rebuild database
     print("Creating database tables...")
     Base.metadata.create_all(bind=engine)
 
