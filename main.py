@@ -1,7 +1,9 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import router  # Use relative import with the .app prefix
+from app.routes import router
+from app.models import Base
+from app.database import create_database
 
 app = FastAPI()
 
@@ -15,6 +17,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.on_event("startup")
+async def startup_event():
+    create_database()
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8000)
