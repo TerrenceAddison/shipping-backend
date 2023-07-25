@@ -16,7 +16,7 @@ def calculate_shipping_cost(box: Box, starting_country: str) -> Tuple[float, flo
     chargeable_weight = max(gross_weight, volumetric_weight)
 
     # Calculate the shipping cost based on chargeable weight and per-kg rate
-    total_weight = chargeable_weight * box.count
+    total_weight = chargeable_weight
 
     oversized_fee = 0.0
     overweight_fee = 0.0
@@ -43,6 +43,10 @@ def get_shipping_quotes(quote_request: QuoteRequest) -> List[Quote]:
     service_fee = 0.0
     total_oversized_fee = 0.0
     total_overweight_fee = 0.0
+
+    # service fee
+    if quote_request.starting_country == "China":
+        service_fee += 300.0
 
     weight_and_costs = [calculate_shipping_cost(
         box, quote_request.starting_country, ) for box in quote_request.boxes]
@@ -72,17 +76,15 @@ def get_shipping_quotes(quote_request: QuoteRequest) -> List[Quote]:
         .first()
     )
 
-    # service fee
-    if quote_request.starting_country == "China":
-        service_fee += 300.0
+    shipping_cost_air = total_shipping_weight * per_kg_rate.per_kg_rate
 
-    total_cost_air = total_shipping_weight * per_kg_rate.per_kg_rate + service_fee + \
+    total_cost_air = shipping_cost_air + service_fee + \
         total_overweight_fee + total_oversized_fee
 
     shipping_time_range_air = ShippingTimeRange(
         min_days=shipping_rate.min_days, max_days=shipping_rate.max_days)
     cost_breakdown_air = CostBreakdown(
-        shipping_cost=total_cost_air,
+        shipping_cost=shipping_cost_air,
         service_fee=service_fee,
         oversized_fee=total_oversized_fee,
         overweight_fee=total_overweight_fee
@@ -118,12 +120,13 @@ def get_shipping_quotes(quote_request: QuoteRequest) -> List[Quote]:
     )
 
     if per_kg_rate_ocean:
-        total_cost_ocean = total_shipping_weight * per_kg_rate_ocean.per_kg_rate + service_fee + \
+        shipping_cost_ocean = total_shipping_weight * per_kg_rate_ocean.per_kg_rate
+        total_cost_ocean = shipping_cost_ocean + service_fee + \
             total_overweight_fee + total_oversized_fee
         shipping_time_range_ocean = ShippingTimeRange(
             min_days=shipping_rate_ocean.min_days, max_days=shipping_rate_ocean.max_days)
         cost_breakdown_ocean = CostBreakdown(
-            shipping_cost=total_cost_ocean,
+            shipping_cost=shipping_cost_ocean,
             service_fee=service_fee,
             oversized_fee=total_oversized_fee,
             overweight_fee=total_overweight_fee
