@@ -3,7 +3,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from .models import Base
 
-DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/postgres"
+# DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/postgres"  # for localhost use
+DATABASE_URL = "postgresql://postgres:postgres@database:5432/postgres"  # for docker
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
