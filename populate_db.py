@@ -20,6 +20,8 @@ def populate_db():
     # create_database() # use database.py to create database
 
     session = SessionLocal()
+    if session.query(ShippingRate).count() > 0:
+        return
 
     for item in data:
         shipping_rate = ShippingRate(

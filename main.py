@@ -8,10 +8,7 @@ from populate_db import populate_db
 
 app = FastAPI()
 
-# Include the router from app.routes.py
 app.include_router(router)
-
-# Configure CORS (Cross-Origin Resource Sharing) to allow requests from any origin
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
