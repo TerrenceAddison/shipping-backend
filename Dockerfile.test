@@ -1,0 +1,15 @@
+# Use the official Python base image
+FROM python:3.9-slim
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the requirements-test.txt file and install the Python dependencies for testing
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the entire application directory into the container
+COPY . .
+
+# Run the test command, for example, using pytest
+CMD ["pytest"]
