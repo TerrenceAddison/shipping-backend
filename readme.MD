@@ -1,6 +1,6 @@
 # shipping-backend
 
-Simple backend system of a shipping service to check for rates of shipping some goods.
+Simple backend system of a shipping service to check for rates of shipping some goods, built using python and FastAPI
 Rates are automatically imported (from data/rates (1).json) into the database when the system is run.
 You can see the import function under `populate_db.py`.
 
