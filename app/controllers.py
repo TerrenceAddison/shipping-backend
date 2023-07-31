@@ -2,6 +2,7 @@ from app.schemas import QuoteRequest, Quote, Box
 from app.schemas import ShippingTimeRange, CostBreakdown
 from app.models import ShippingRate, Rate
 from app.database import SessionLocal
+from app.constants import MAX_BOX_WEIGHT, MAX_BOX_DIMENSION, MAX_BOX_WEIGHT_INDIA, MAX_BOX_DIMENSION_VIETNAM, SERVICE_FEE_CHINA, OVERWEIGHT_FEE, OVERSIZED_FEE
 from typing import List, Tuple
 from fastapi import HTTPException
 
@@ -22,16 +23,16 @@ def calculate_shipping_cost(box: Box, starting_country: str) -> Tuple[float, flo
     oversized_fee = 0.0
     overweight_fee = 0.0
 
-    if box.weight_kg > 30:
-        overweight_fee += (80.0 * box.count)
-    if max(box.length, box.width, box.height) > 120:
-        oversized_fee += (100.0 * box.count)
+    if box.weight_kg > MAX_BOX_WEIGHT:
+        overweight_fee += (OVERWEIGHT_FEE * box.count)
+    if max(box.length, box.width, box.height) > MAX_BOX_DIMENSION:
+        oversized_fee += (OVERSIZED_FEE * box.count)
 
     # Apply country-specific fees
-    if starting_country == "India" and box.weight_kg >= 15 and overweight_fee == 0.0:
-        overweight_fee += (80.0 * box.count)
-    elif starting_country == "Vietnam" and max(box.length, box.width, box.height) > 70:
-        oversized_fee += (100.0 * box.count)
+    if starting_country == "India" and box.weight_kg >= MAX_BOX_WEIGHT_INDIA and overweight_fee == 0.0:
+        overweight_fee += (OVERWEIGHT_FEE * box.count)
+    elif starting_country == "Vietnam" and max(box.length, box.width, box.height) > MAX_BOX_DIMENSION_VIETNAM:
+        oversized_fee += (OVERSIZED_FEE * box.count)
 
     session.close()
     return total_weight, oversized_fee, overweight_fee
@@ -48,7 +49,7 @@ def get_shipping_quotes(quote_request: QuoteRequest) -> List[Quote]:
 
         # service fee
         if quote_request.starting_country == "China":
-            service_fee += 300.0
+            service_fee += SERVICE_FEE_CHINA
 
         weight_and_costs = [calculate_shipping_cost(
             box, quote_request.starting_country, ) for box in quote_request.boxes]

@@ -1,7 +1,7 @@
 import pytest
 from app.schemas import QuoteRequest, Quote, Box
-from app.models import ShippingRate, Rate
 from app.controllers import get_shipping_quotes, calculate_shipping_cost
+from app.constants import MAX_BOX_WEIGHT, MAX_BOX_DIMENSION, MAX_BOX_WEIGHT_INDIA, MAX_BOX_DIMENSION_VIETNAM, SERVICE_FEE_CHINA, OVERWEIGHT_FEE, OVERSIZED_FEE
 from fastapi import HTTPException
 from pydantic import ValidationError
 
@@ -14,7 +14,7 @@ def test_calculate_shipping_cost():
         box, "China")
     assert total_weight == 80.0
     assert oversized_fee == 0.0
-    assert overweight_fee == 160.0
+    assert overweight_fee == OVERWEIGHT_FEE * 2
 
     # Test case 2: Box weight > 30 and box dimension > 120 (and more than 1 box)
     box = Box(count=3, weight_kg=40.0, length=1.0,
@@ -22,8 +22,8 @@ def test_calculate_shipping_cost():
     total_weight, oversized_fee, overweight_fee = calculate_shipping_cost(
         box, "China")
     assert total_weight == 120.0
-    assert oversized_fee == 300.0
-    assert overweight_fee == 240.0
+    assert oversized_fee == OVERSIZED_FEE * 3
+    assert overweight_fee == OVERWEIGHT_FEE * 3
 
     # Test case 3: Box weight < 30 and box dimension < 120
     box = Box(count=1, weight_kg=20.0, length=1.0, width=1.0, height=1.0)
@@ -38,7 +38,7 @@ def test_calculate_shipping_cost():
     total_weight, oversized_fee, overweight_fee = calculate_shipping_cost(
         box, "China")
     assert total_weight == 20.0
-    assert oversized_fee == 100.0
+    assert oversized_fee == OVERSIZED_FEE
     assert overweight_fee == 0.0
 
     # Test case 5: Volumetric weight > gross Weight (with oversized and overweight fees)
@@ -46,24 +46,24 @@ def test_calculate_shipping_cost():
     total_weight, oversized_fee, overweight_fee = calculate_shipping_cost(
         box, "China")
     assert total_weight == 50.0
-    assert oversized_fee == 100.0
-    assert overweight_fee == 80.0
+    assert oversized_fee == OVERSIZED_FEE
+    assert overweight_fee == OVERWEIGHT_FEE
 
     # Test case 6: Shipment from India overweight for more than 15kg, oversized is normal
     box = Box(count=2, weight_kg=20.0, length=1.0, width=130.0, height=1.0)
     total_weight, oversized_fee, overweight_fee = calculate_shipping_cost(
         box, "India")
     assert total_weight == 40.0
-    assert oversized_fee == 200.0
-    assert overweight_fee == 160.0
+    assert oversized_fee == OVERSIZED_FEE * 2
+    assert overweight_fee == OVERWEIGHT_FEE * 2
 
     # Test case 7: Shipment from vietnam oversized for more than 70cm, overweight is normal
     box = Box(count=2, weight_kg=40.0, length=1.0, width=80.0, height=1.0)
     total_weight, oversized_fee, overweight_fee = calculate_shipping_cost(
         box, "Vietnam")
     assert total_weight == 80.0
-    assert oversized_fee == 200.0
-    assert overweight_fee == 160.0
+    assert oversized_fee == OVERSIZED_FEE * 2
+    assert overweight_fee == OVERWEIGHT_FEE * 2
 
 
 def test_get_shipping_quotes():
@@ -167,16 +167,3 @@ def test_get_shipping_quotes():
 
     assert exc_info.value.status_code == 500
     assert exc_info.value.detail == "Internal Server Error"
-
-    # Test case 6: missing parameter error
-    try:
-        quote_request_data = QuoteRequest(
-            starting_country="China",
-            boxes=[
-                Box(count=1, weight_kg=1.0,
-                    length=1.0, width=1.0, height=1.0),
-            ],
-        )
-
-    except ValidationError as exc:
-        print(exc)
